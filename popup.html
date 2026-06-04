@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero-Trust Local Key Defense Matrix</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <button class="header-icon-btn hidden" id="btn-open-settings" title="安全設定">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+      <span class="header-title">Authenticator</span>
+      <div class="header-actions-right">
+        <button class="header-icon-btn hidden" id="btn-open-scan" title="新增密鑰">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+        </button>
+        <button class="header-icon-btn hidden" id="btn-toggle-edit" title="編輯帳戶">
+          <svg id="edit-icon-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          <svg id="edit-icon-check" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Container -->
+    <main class="app-body">
+      
+      <!-- SCREEN 1: INITIAL SETUP -->
+      <section id="screen-setup" class="screen hidden">
+        <div class="screen-header">
+          <h2>初始化矩陣</h2>
+          <p class="subtitle">設定主密碼以啟用零知識加密儲存區。</p>
+        </div>
+        <form id="form-setup" class="matrix-form">
+          <div class="input-group">
+            <label for="setup-password">設定主密碼 (Master Password)</label>
+            <input type="password" id="setup-password" required placeholder="至少 8 位強密碼">
+            <div class="password-strength-bar">
+              <div id="strength-fill"></div>
+            </div>
+            <span class="input-hint" id="strength-label">密碼強度：弱</span>
+          </div>
+          <div class="input-group">
+            <label for="setup-confirm">確認主密碼</label>
+            <input type="password" id="setup-confirm" required placeholder="再次輸入以確認">
+          </div>
+          <div class="security-warning">
+            <svg viewBox="0 0 24 24" class="warning-icon"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span class="warning-text">請務必牢記此密碼！系統為本機零知識設計，若密碼丟失，所有驗證碼金鑰將永久無法復原。</span>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-do-setup">
+            <span>部署安全矩陣</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- SCREEN 2: VAULT LOCKED -->
+      <section id="screen-unlock" class="screen hidden">
+        <div class="screen-header">
+          <div class="lock-graphic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+          <h2>金鑰庫已鎖定</h2>
+          <p class="subtitle">請輸入主密碼解密本地安全區。</p>
+        </div>
+        <form id="form-unlock" class="matrix-form">
+          <div class="input-group">
+            <input type="password" id="unlock-password" required placeholder="請輸入主密碼" autofocus>
+            <div class="error-msg hidden" id="unlock-error">主密碼錯誤，解密失敗！</div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-do-unlock">
+            <span>安全解鎖</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- SCREEN 3: DASHBOARD -->
+      <section id="screen-dashboard" class="screen hidden">
+        <!-- Accounts Scroll Container -->
+        <div class="accounts-scroll">
+          <div id="empty-state" class="empty-state hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <p>尚未添加任何 2FA 密鑰</p>
+            <span class="sub-text">點擊右上角加號按鈕以添加帳戶</span>
+          </div>
+          <div id="accounts-list" class="accounts-list">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- MODAL 1: ADD ACCOUNT -->
+    <div id="modal-add" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>新增密鑰</h3>
+          <button class="close-btn" id="btn-close-add">&times;</button>
+        </div>
+        <form id="form-add" class="matrix-form">
+          <div class="input-group">
+            <label for="add-issuer">服務平台 (Issuer)</label>
+            <input type="text" id="add-issuer" required placeholder="例如：Discord, GitHub, Binance" autocomplete="off">
+          </div>
+          <div class="input-group">
+            <label for="add-name">帳戶標識 (Account Email/Name)</label>
+            <input type="text" id="add-name" required placeholder="例如：admin@company.com" autocomplete="off">
+          </div>
+          <div class="input-group">
+            <label for="add-secret">密鑰金鑰 (Secret Key - Base32)</label>
+            <input type="text" id="add-secret" required placeholder="輸入 2FA 金鑰字串" autocomplete="off">
+            <span class="input-hint">系統會自動清除空格與連字號，並轉化為大寫。</span>
+          </div>
+          <div class="error-msg hidden" id="add-error">金鑰格式錯誤，必須為 Base32 字元！</div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-add">取消</button>
+            <button type="submit" class="btn btn-primary">確認寫入</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL 2: AUDIT LOGS -->
+    <div id="modal-logs" class="modal-overlay hidden">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h3>本地安全審計日誌 (Logs)</h3>
+          <button class="close-btn" id="btn-close-logs">&times;</button>
+        </div>
+        <div class="logs-container">
+          <div class="logs-table-wrapper">
+            <table class="logs-table">
+              <thead>
+                <tr>
+                  <th>時間戳</th>
+                  <th>操作事件</th>
+                </tr>
+              </thead>
+              <tbody id="logs-tbody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-close-logs-footer">關閉</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 3: BACKUP / RESTORE -->
+    <div id="modal-backup-panel" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>資料備份與還原</h3>
+          <button class="close-btn" id="btn-close-backup">&times;</button>
+        </div>
+        <div class="backup-options">
+          <div class="backup-section">
+            <h4>零知識備份 (Export)</h4>
+            <p class="section-desc">以主密碼再次進行 AES-GCM 加密，導出為密文檔案。即使上傳雲端也絕對安全。</p>
+            <button class="btn btn-secondary btn-full" id="btn-export-file">
+              <svg viewBox="0 0 24 24" class="btn-icon" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>導出加密備份檔</span>
+            </button>
+          </div>
+          
+          <div class="backup-divider"></div>
+
+          <div class="backup-section">
+            <h4>還原加密備份 (Import)</h4>
+            <p class="section-desc">選擇加密備份檔並輸入備份所用的主密碼進行還原（注意：將會覆蓋現有資料）。</p>
+            <div class="file-input-wrapper">
+              <button class="btn btn-secondary btn-full" id="btn-trigger-file">選擇備份檔案 (.json)</button>
+              <input type="file" id="import-file" accept=".json" class="hidden">
+              <span id="selected-filename" class="selected-filename">未選擇任何檔案</span>
+            </div>
+            
+            <div class="input-group hidden" id="backup-password-group">
+              <label for="backup-password">輸入該備份檔的主密碼</label>
+              <input type="password" id="backup-password" placeholder="輸入解密密碼">
+            </div>
+
+            <div class="error-msg hidden" id="import-error">還原失敗！可能密碼錯誤或檔案損毀。</div>
+            <button class="btn btn-primary btn-full hidden" id="btn-submit-import">確認還原載入</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 4: SETTINGS OVERLAY -->
+    <div id="modal-settings" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>安全設定與工具</h3>
+          <button class="close-btn" id="btn-close-settings">&times;</button>
+        </div>
+        <div class="settings-menu-list">
+          <button class="settings-menu-item" id="btn-menu-open-web">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span>開啟網頁版儀表板</span>
+          </button>
+          <button class="settings-menu-item" id="btn-menu-show-logs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>資安審計日誌</span>
+          </button>
+          <button class="settings-menu-item" id="btn-menu-show-backup">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>資料備份與還原</span>
+          </button>
+          <button class="settings-menu-item highlight" id="btn-menu-lock">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>立即鎖定金鑰庫</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">複製成功</div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
