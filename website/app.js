@@ -263,26 +263,26 @@ async function establishSecureChannel() {
 
   const attemptConnect = (retriesLeft) => {
     return new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage({
-        type: "CONNECT_IPC",
-        publicKey: exportedPubKey
-      }, async (response) => {
-        if (chrome.runtime.lastError) {
-          const errMsg = chrome.runtime.lastError.message;
-          // Retry if background service worker is starting up and not yet ready
-          if (retriesLeft > 0 && (errMsg.includes("Could not establish connection") || errMsg.includes("Receiving end does not exist"))) {
-            setTimeout(() => {
-              attemptConnect(retriesLeft - 1).then(resolve).catch(reject);
-            }, 150);
+      try {
+        chrome.runtime.sendMessage({
+          type: "CONNECT_IPC",
+          publicKey: exportedPubKey
+        }, async (response) => {
+          if (chrome.runtime.lastError) {
+            const errMsg = chrome.runtime.lastError.message;
+            if (retriesLeft > 0 && (errMsg.includes("Could not establish connection") || errMsg.includes("Receiving end does not exist"))) {
+              setTimeout(() => {
+                attemptConnect(retriesLeft - 1).then(resolve).catch(reject);
+              }, 150);
+              return;
+            }
+            reject(new Error(errMsg));
             return;
           }
-          reject(new Error(errMsg));
-          return;
-        }
-        if (!response || !response.success) {
-          reject(new Error(response ? response.error : "ECDH secure handshake failed"));
-          return;
-        }
+          if (!response || !response.success) {
+            reject(new Error(response ? response.error : "ECDH secure handshake failed"));
+            return;
+          }
         try {
           const bgPubKey = await importPublicKey(response.publicKey);
           ecdhSharedKey = await deriveECDHSharedSecret(keyPair.privateKey, bgPubKey);
@@ -306,37 +306,13 @@ async function sendEncryptedRequest(action, params = {}, isRetry = false) {
   const encryptedReq = await encryptAESGCM(ecdhSharedKey, JSON.stringify({ action, params }));
   
   return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({
-      type: "ENCRYPTED_MSG",
-      iv: encryptedReq.iv,
-      ciphertext: encryptedReq.ciphertext
-    }, async (response) => {
-      if (chrome.runtime.lastError) {
-        if (!isRetry) {
-          try {
-            await establishSecureChannel();
-            resolve(await sendEncryptedRequest(action, params, true));
-          } catch (e) { reject(e); }
-          return;
-        }
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      if (!response) {
-        reject(new Error("Empty response from database sandbox"));
-        return;
-      }
-
-      if (response.type === "ENCRYPTED_MSG") {
-        try {
-          const decryptedStr = await decryptAESGCM(ecdhSharedKey, response.iv, response.ciphertext);
-          const res = JSON.parse(decryptedStr);
-          if (res.success) {
-            resolve(res.data);
-          } else {
-            reject(new Error(res.error || res.data?.error || "Vault rejected request"));
-          }
-        } catch (err) {
+    try {
+      chrome.runtime.sendMessage({
+        type: "ENCRYPTED_MSG",
+        iv: encryptedReq.iv,
+        ciphertext: encryptedReq.ciphertext
+      }, async (response) => {
+        if (chrome.runtime.lastError) {
           if (!isRetry) {
             try {
               await establishSecureChannel();
@@ -344,19 +320,51 @@ async function sendEncryptedRequest(action, params = {}, isRetry = false) {
             } catch (e) { reject(e); }
             return;
           }
-          reject(new Error("IPC Decryption error: " + err.message));
-        }
-      } else {
-        if (!isRetry && response.error && response.error.includes("IPC channel")) {
-          try {
-            await establishSecureChannel();
-            resolve(await sendEncryptedRequest(action, params, true));
-          } catch (e) { reject(e); }
+          reject(new Error(chrome.runtime.lastError.message));
           return;
         }
-        reject(new Error(response.error || "Unexpected raw response"));
+        if (!response) {
+          reject(new Error("Empty response from database sandbox"));
+          return;
+        }
+
+        if (response.type === "ENCRYPTED_MSG") {
+          try {
+            const decryptedStr = await decryptAESGCM(ecdhSharedKey, response.iv, response.ciphertext);
+            const res = JSON.parse(decryptedStr);
+            if (res.success) {
+              resolve(res.data);
+            } else {
+              reject(new Error(res.error || res.data?.error || "Vault rejected request"));
+            }
+          } catch (err) {
+            if (!isRetry) {
+              try {
+                await establishSecureChannel();
+                resolve(await sendEncryptedRequest(action, params, true));
+              } catch (e) { reject(e); }
+              return;
+            }
+            reject(new Error("IPC Decryption error: " + err.message));
+          }
+        } else {
+          if (!isRetry && response.error && response.error.includes("IPC channel")) {
+            try {
+              await establishSecureChannel();
+              resolve(await sendEncryptedRequest(action, params, true));
+            } catch (e) { reject(e); }
+            return;
+          }
+          reject(new Error(response.error || "Unexpected raw response"));
+        }
+      });
+    } catch (e) {
+      if (e.message && e.message.includes("Extension context invalidated")) {
+        window.location.reload();
+      } else {
+        reject(e);
       }
-    });
+    }
   });
 }
 
@@ -579,14 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Search input mock focus
-  const searchInput = document.querySelector(".navbar-search-input");
-  if (searchInput) {
-    searchInput.addEventListener("focus", () => {
-      showToast("搜尋功能已停用 (本機離線文檔)");
-      searchInput.blur();
-    });
-  }
+
 
   // Default to showing Home view first
   switchView("home");
