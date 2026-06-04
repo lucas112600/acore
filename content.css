@@ -1,0 +1,89 @@
+/* acore Injected Floating 2FA Badge Stylesheet - Ultra Clean Code Pill */
+
+.acore-floating-badge-container {
+  all: initial; /* Reset all styles */
+  position: absolute;
+  z-index: 9999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.acore-floating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  padding: 6px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s, border-color 0.15s;
+  user-select: none;
+  animation: acoreFadeInUp 0.2s ease-out forwards;
+}
+
+.acore-floating-badge:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 194, 160, 0.25);
+  border-color: #25c2a0;
+}
+
+.acore-badge-code {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d9d82;
+  letter-spacing: 0.05em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.acore-badge-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* Tiny Countdown Ring */
+.acore-badge-timer {
+  transform: rotate(-90deg);
+}
+
+.acore-badge-timer-fill {
+  transition: stroke-dashoffset 1s linear, stroke 0.2s ease;
+}
+
+/* Status Bubble */
+.acore-badge-status {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #323336;
+  color: #ffffff;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.acore-badge-status.active {
+  opacity: 1;
+  transform: translate(-50%, -2px);
+}
+
+@keyframes acoreFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
