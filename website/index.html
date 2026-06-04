@@ -13,10 +13,7 @@
       <div class="navbar__items">
         <a class="navbar__brand" href="#home" id="nav-brand">
           <div class="navbar__logo">
-            <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
+            <img src="logo.png" alt="acore logo" class="logo-img" style="height: 32px; width: 32px; border-radius: 6px;">
           </div>
           <b class="navbar__title">acore</b>
         </a>
@@ -26,9 +23,7 @@
         <a class="navbar__item navbar__link" href="#dashboard" id="nav-dashboard">金鑰驗證中心</a>
       </div>
       <div class="navbar__items navbar__items--right">
-        <div class="navbarSearchContainer">
-          <input type="text" class="navbar-search-input" placeholder="Search (Meta+K)">
-        </div>
+
         <a href="https://github.com/facebook/docusaurus" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link header-github-link" aria-label="GitHub repository">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
             <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
@@ -53,12 +48,21 @@
       <header class="hero-banner">
         <div class="hero-inner">
           <div class="hero-logo-container">
-            <svg class="hero-logo-svg" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="50" r="46" fill="rgba(255,255,255,0.06)" stroke="currentColor" stroke-width="3" />
-              <path d="M50 25c-8.28 0-15 6.72-15 15v8c-2.76 0-5 2.24-5 5v22c0 2.76 2.24 5 5 5h30c2.76 0 5-2.24 5-5V53c0-2.76-2.24-5-5-5v-8c0-8.28-6.72-15-15-15zm0 6c4.97 0 9 4.03 9 9v8H41v-8c0-4.97 4.03-9 9-9zm0 28c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4z" fill="currentColor" />
+            <img src="logo.png" alt="acore hero logo" class="hero-logo-img" style="height: 120px; width: 120px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+          </div>
+          <div class="gradient-title-wrapper">
+            <svg class="icon-inline" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 22l10-4 10 4L12 2z"/>
+              <path d="M12 18v4M7 16l-3 3M17 16l3 3M4 9l-2-2M20 9l2-2"/>
+            </svg>
+            <h1 class="gradient-title">acore 1.0 is out!</h1>
+            <svg class="icon-inline" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
             </svg>
           </div>
-          <h1 class="hero-title">acore</h1>
           <p class="hero-tagline">本地 2FA 驗證工具，保護您的帳戶安全</p>
           <div class="hero-ctas">
             <button class="hero-btn hero-btn-primary" id="hero-get-started">
@@ -66,6 +70,9 @@
               <svg class="icon-inline" style="vertical-align: middle; margin-left: 4px;" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </button>
             <button class="hero-btn hero-btn-secondary" id="hero-go-dashboard">金鑰驗證中心</button>
+          </div>
+          <div class="promo-image-container">
+            <img src="promo.png" alt="acore Promo" class="promo-image" />
           </div>
         </div>
       </header>
