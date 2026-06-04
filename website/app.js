@@ -286,11 +286,18 @@ async function establishSecureChannel() {
         try {
           const bgPubKey = await importPublicKey(response.publicKey);
           ecdhSharedKey = await deriveECDHSharedSecret(keyPair.privateKey, bgPubKey);
-          resolve();
+          resolve(true);
         } catch (err) {
-          reject(err);
+          reject(new Error("ECDH Key Derivation failed: " + err.message));
         }
       });
+      } catch (e) {
+        if (e.message && e.message.includes("Extension context invalidated")) {
+          window.location.reload();
+        } else {
+          reject(e);
+        }
+      }
     });
   };
 
