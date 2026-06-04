@@ -100,9 +100,11 @@ async function establishSecureChannel() {
   return attemptConnect(4); // Try up to 5 times (1 initial + 4 retries)
 }
 
-async function sendEncryptedRequest(action, params = {}) {
+async function sendEncryptedRequest(action, params = {}, isRetry = false) {
   if (!ecdhSharedKey) {
-    throw new Error("Secure communication channel not established");
+    if (isRetry) throw new Error("Secure communication channel not established");
+    await establishSecureChannel();
+    return sendEncryptedRequest(action, params, true);
   }
   const encryptedReq = await encryptAESGCM(ecdhSharedKey, JSON.stringify({ action, params }));
   
@@ -113,6 +115,13 @@ async function sendEncryptedRequest(action, params = {}) {
       ciphertext: encryptedReq.ciphertext
     }, async (response) => {
       if (chrome.runtime.lastError) {
+        if (!isRetry) {
+          try {
+            await establishSecureChannel();
+            resolve(await sendEncryptedRequest(action, params, true));
+          } catch (e) { reject(e); }
+          return;
+        }
         reject(new Error(chrome.runtime.lastError.message));
         return;
       }
@@ -128,12 +137,26 @@ async function sendEncryptedRequest(action, params = {}) {
           if (res.success) {
             resolve(res.data);
           } else {
-            reject(new Error(res.data.error || "Vault process rejected request"));
+            reject(new Error(res.error || res.data?.error || "Vault process rejected request"));
           }
         } catch (err) {
+          if (!isRetry) {
+            try {
+              await establishSecureChannel();
+              resolve(await sendEncryptedRequest(action, params, true));
+            } catch (e) { reject(e); }
+            return;
+          }
           reject(new Error("IPC Decryption error: " + err.message));
         }
       } else {
+        if (!isRetry && response.error && response.error.includes("IPC channel")) {
+          try {
+            await establishSecureChannel();
+            resolve(await sendEncryptedRequest(action, params, true));
+          } catch (e) { reject(e); }
+          return;
+        }
         reject(new Error(response.error || "Unexpected raw response from background"));
       }
     });
