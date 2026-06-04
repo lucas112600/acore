@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Zero-Trust Local Key Defense Matrix",
+  "version": "1.0.0",
+  "description": "本地零知識 2FA 密鑰防禦矩陣，提供 ECDH 加密 IPC 及零殘留記憶體安全防護。",
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Local Key Defense Matrix"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none';"
+  }
+}
