@@ -1696,3 +1696,43 @@ html[data-theme='dark'] code {
     font-size: 18px;
   }
 }
+/* Promo Banner Styles */
+.gradient-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px 0;
+  color: #ff6b00; /* Fallback icon color */
+}
+
+.gradient-title {
+  background: linear-gradient(90deg, #b026ff, #ff2a00, #ffb800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border-bottom: 4px solid transparent;
+  border-image: linear-gradient(90deg, #b026ff, #ff2a00, #ffb800);
+  border-image-slice: 1;
+  padding-bottom: 6px;
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.promo-image-container {
+  margin-top: 48px;
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.promo-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+  border: 1px solid var(--border-color);
+}
