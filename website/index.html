@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>acore | 本地零知識密鑰防禦 驗證中心暨說明文件</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <nav class="navbar navbar--fixed-top">
+    <div class="navbar__inner">
+      <div class="navbar__items">
+        <a class="navbar__brand" href="#home" id="nav-brand">
+          <div class="navbar__logo">
+            <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <b class="navbar__title">acore</b>
+        </a>
+        <a class="navbar__item navbar__link navbar__link--active" href="#home" id="nav-home">首頁</a>
+        <a class="navbar__item navbar__link" href="#docs" id="nav-docs">說明文件</a>
+        <a class="navbar__item navbar__link" href="#crypto" id="nav-api">API 規範</a>
+        <a class="navbar__item navbar__link" href="#dashboard" id="nav-dashboard">金鑰驗證中心</a>
+      </div>
+      <div class="navbar__items navbar__items--right">
+        <div class="navbarSearchContainer">
+          <input type="text" class="navbar-search-input" placeholder="Search (Meta+K)">
+        </div>
+        <a href="https://github.com/facebook/docusaurus" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link header-github-link" aria-label="GitHub repository">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+        <button class="clean-btn theme-toggle-btn" type="button" aria-label="Switch theme" id="theme-toggle">
+          <!-- Sun icon -->
+          <svg viewBox="0 0 24 24" width="22" height="22" class="light-toggle-icon">
+            <path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- App Views Wrapper -->
+  <div class="main-wrapper">
+    
+    <!-- ================= VIEW 1: HOME PAGE ================= -->
+    <div id="view-home" class="home-container-layout">
+      <!-- Hero Banner -->
+      <header class="hero-banner">
+        <div class="hero-inner">
+          <div class="hero-logo-container">
+            <svg class="hero-logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <rect x="9" y="11" width="6" height="5" rx="1" fill="currentColor"/>
+              <path d="M12 8v3" stroke-width="3"/>
+            </svg>
+          </div>
+          <h1 class="hero-title">acore</h1>
+          <p class="hero-tagline">本地零知識密鑰防禦，守護高價值安全資產</p>
+          <div class="hero-ctas">
+            <button class="hero-btn hero-btn-primary" id="hero-get-started">快速開始 &nbsp;⏱️</button>
+            <button class="hero-btn hero-btn-secondary" id="hero-go-dashboard">金鑰驗證中心</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Features Section -->
+      <section class="home-section features-section">
+        <div class="section-container">
+          <div class="features-grid">
+            <div class="feature-col">
+              <div class="feature-image-container">
+                <svg viewBox="0 0 24 24" class="feature-svg" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="4" width="20" height="12" rx="2"/>
+                  <path d="M6 8h12M6 12h8"/>
+                  <rect x="4" y="19" width="16" height="2" rx="1"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">本機隔離沙盒</h3>
+              <p class="feature-desc">外掛絕不請求外部網路存取權限。所有加密、解密與 TOTP 計算完全在瀏覽器本機的隔離沙盒內運行，徹底杜絕金鑰外流的可能性。</p>
+            </div>
+            
+            <div class="feature-col">
+              <div class="feature-image-container">
+                <svg viewBox="0 0 24 24" class="feature-svg" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                  <path d="M12 6v12M6 12h12M12 12L7.5 7.5M12 12l4.5 4.5M12 12l4.5-4.5M12 12L7.5 16.5"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">高強度密碼學與通道</h3>
+              <p class="feature-desc">採用 PBKDF2 金鑰衍生與 256 位元 AES-GCM 本地加密。Popup 前端與背景沙盒之間每次通訊皆透過 ECDH 動態共享金鑰，防範本機側錄攻擊。</p>
+            </div>
+            
+            <div class="feature-col">
+              <div class="feature-image-container">
+                <svg viewBox="0 0 24 24" class="feature-svg" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                  <path d="M12 11v6M9 14l3 3 3-3"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">零知識安全備份</h3>
+              <p class="feature-desc">支援安全導出加密備份。配合 CSPRNG 隨機鹽值與主密碼進行本地對稱加密備份，確保隨時可安全備份及還原金鑰，不留任何明文後門。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      <!-- Footer -->
+      <footer class="home-footer">
+        <div class="footer-container">
+          <div class="footer-links">
+            <div class="footer-column">
+              <div class="footer-title">產品文件</div>
+              <ul class="footer-items">
+                <li><a class="footer-link-item" href="#docs" data-chapter="intro">系統定位</a></li>
+                <li><a class="footer-link-item" href="#docs" data-chapter="install">安裝指南</a></li>
+                <li><a class="footer-link-item" href="#docs" data-chapter="crypto">密碼學機制</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <div class="footer-title">安全合規</div>
+              <ul class="footer-items">
+                <li><a class="footer-link-item" href="#docs" data-chapter="backup-schema">備份檔案規格</a></li>
+                <li><a class="footer-link-item" href="#docs" data-chapter="audit-spec">審計日誌規範</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <div class="footer-title">開源社群</div>
+              <ul class="footer-items">
+                <li><a href="https://github.com/facebook/docusaurus" target="_blank" class="footer-link-item">GitHub 專案</a></li>
+                <li><a href="#" class="footer-link-item">討論區</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div class="footer-logo">
+              <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 8px;">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <strong>acore Security Matrix</strong>
+            </div>
+            <div class="footer-copyright">Copyright © 2026 acore Project. Built with Docusaurus-Style Vanilla CSS.</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- ================= VIEW 2: DOCUMENTATION READER ================= -->
+    <div id="view-docs" class="docs-container-layout hidden">
+      <!-- Left Sidebar -->
+      <aside class="docs-sidebar">
+        <nav class="sidebar-nav-menu">
+          <button class="sidebar-link active" data-chapter="intro">
+            <span>系統簡介</span>
+          </button>
+          <button class="sidebar-link" data-chapter="install">
+            <span>安裝指南</span>
+          </button>
+          <button class="sidebar-link" data-chapter="crypto">
+            <span>密碼學架構</span>
+          </button>
+          <button class="sidebar-link" data-chapter="backup-schema">
+            <span>備份檔案格式</span>
+          </button>
+          <button class="sidebar-link" data-chapter="audit-spec">
+            <span>審計日誌規範</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Center Main Content Reader -->
+      <main class="docs-main-content">
+        
+        <!-- CHAPTER 1: INTRO -->
+        <article id="chapter-intro" class="doc-chapter">
+          <header class="doc-header">
+            <div class="doc-badge">系統定位</div>
+            <h2>本地零信任安全防禦矩陣 (acore)</h2>
+            <p class="lead">acore 是一套本機運行的 2FA 金鑰防禦矩陣，專為代管大量高價值帳戶之企業與管理員設計。</p>
+          </header>
+          
+          <section class="doc-section">
+            <h3 id="intro-sec-1">🛡️ 核心安全防禦邊界</h3>
+            <p>系統架構基於 Chrome Extension Manifest V3 最嚴格的安全防範模型建置，並遵守以下三大核心原則：</p>
+            <div class="principles-grid">
+              <div class="principle-card">
+                <div class="principle-num">01</div>
+                <h4>絕不儲存明文密鑰</h4>
+                <p>任何寫入瀏覽器本地資料庫（chrome.storage.local）的資料皆經過加密保護。即便電腦硬碟被實體拷貝，無主密碼亦無法解密。</p>
+              </div>
+              <div class="principle-card">
+                <div class="principle-num">02</div>
+                <h4>絕不依賴外部網路</h4>
+                <p>所有加密、解密與 TOTP 計算完全在瀏覽器本機的隔離沙盒內運行。外掛不請求任何網路存取權限，徹底杜絕資料外流的通道。</p>
+              </div>
+              <div class="principle-card">
+                <div class="principle-num">03</div>
+                <h4>記憶體即用即收</h4>
+                <p>2FA 密鑰解密後的明文變數在記憶體中留存時間不超過 1 秒，每次計算完成後立即使用 <code>fill(0)</code> 覆寫記憶體空間，防止記憶體傾印攻擊。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="doc-section">
+            <h3 id="intro-sec-2">🏗️ 隔離與 IPC 安全模型</h3>
+            <p>為了防止惡意軟體藉由偵測擴充功能內部訊息傳遞（IPC）來竊取密鑰，acore 實施了多重隔離設計：</p>
+            <div class="schema-diagram">
+              <div class="node">
+                <span>網頁前端 UI 隔離層</span>
+                <small>(Popup - 不持有密鑰)</small>
+              </div>
+              <div class="arrow-vertical">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                <span>1-to-1 動態 ECDH 金鑰加密 IPC</span>
+              </div>
+              <div class="node highlight-node">
+                <span>密碼學核心沙盒</span>
+                <small>(Background SW - 僅在記憶體解密)</small>
+              </div>
+              <div class="arrow-vertical">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                <span>AES-GCM (256-bit)</span>
+              </div>
+              <div class="node">
+                <span>本地加密儲存區</span>
+                <small>(chrome.storage.local - 密文狀態)</small>
+              </div>
+            </div>
+          </section>
+        </article>
+
+        <!-- CHAPTER 2: INSTALL -->
+        <article id="chapter-install" class="doc-chapter hidden">
+          <header class="doc-header">
+            <div class="doc-badge">部署說明</div>
+            <h2>瀏覽器外掛安裝與配置</h2>
+            <p class="lead">acore 是完全本地化的 Chrome 擴充功能，不依賴任何外部商店或伺服器下載。</p>
+          </header>
+
+          <section class="doc-section">
+            <h3 id="install-sec-1">🛠️ 逐步安裝指引</h3>
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <div class="step-content">
+                  <h4>第一步：下載專案原始碼</h4>
+                  <p>將 <code>acore</code> 外掛專案包解壓縮到您本地電腦的指定目錄（例如 <code>C:\acore</code>）。</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                </div>
+                <div class="step-content">
+                  <h4>第二步：開啟開發人員模式</h4>
+                  <p>在 Chrome 瀏覽器網址列輸入 <code>chrome://extensions/</code>，進入擴充功能管理頁面，並勾選右上角的<strong>「開發人員模式」</strong>。</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <div class="step-content">
+                  <h4>第三步：載入未封裝項目</h4>
+                  <p>點擊頁面左上角的<strong>「載入未封裝項目」</strong>按鈕，選擇剛剛存放原始碼的專案資料夾即可完成安裝。</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="doc-section">
+            <h3 id="install-sec-2">📦 檔案清單格式對照</h3>
+            <p>載入專案時，請確保目錄結構包含以下核心檔案：</p>
+            <div class="file-cards-grid">
+              <div class="file-card-item">
+                <div class="file-icon-wrapper json-color">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <span class="file-ext">JSON</span>
+                </div>
+                <div class="file-meta">
+                  <h5>manifest.json</h5>
+                  <span>外掛資安宣告檔</span>
+                </div>
+              </div>
+              <div class="file-card-item">
+                <div class="file-icon-wrapper js-color">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <span class="file-ext">JS</span>
+                </div>
+                <div class="file-meta">
+                  <h5>background.js</h5>
+                  <span>背景沙盒核心執行緒</span>
+                </div>
+              </div>
+              <div class="file-card-item">
+                <div class="file-icon-wrapper js-color">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <span class="file-ext">JS</span>
+                </div>
+                <div class="file-meta">
+                  <h5>crypto-helper.js</h5>
+                  <span>密碼學演算法模組</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </article>
+
+        <!-- CHAPTER 3: CRYPTO -->
+        <article id="chapter-crypto" class="doc-chapter hidden">
+          <header class="doc-header">
+            <div class="doc-badge">安全性深度分析</div>
+            <h2>密碼學安全機制</h2>
+            <p class="lead">系統核心防禦鏈由 Web Crypto API 的強大演算法建構而成，絕不依賴第三方外部庫。</p>
+          </header>
+
+          <section class="doc-section">
+            <h3 id="crypto-sec-1">🔑 雙層金鑰衍生與加密儲存</h3>
+            <p>當使用者首次開啟外掛並註冊帳戶時，系統透過以下密碼學流程進行密鑰保護：</p>
+            <div class="crypto-flow">
+              <div class="crypto-step">
+                <div class="step-num">A</div>
+                <h4>PBKDF2 金鑰衍生 (KEK)</h4>
+                <p>利用使用者輸入的主密碼，結合 16 位元隨機鹽值（Salt），經過 <strong>100,000 次 SHA-256 反覆迭代計算</strong>，衍生出 256 位元的對稱加密金鑰（Key-Encrypting Key, KEK）。</p>
+              </div>
+              <div class="crypto-step">
+                <div class="step-num">B</div>
+                <h4>AES-GCM (256-bit) 對稱加密</h4>
+                <p>系統每次寫入金鑰（如 TOTP Secret）或儲存設定時，皆隨機產生唯一的 12 位元初始化向量（IV）。加密後的產物包含密文（Ciphertext）與驗證標籤（Tag），提供機密性與完整性校驗。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="doc-section">
+            <h3 id="crypto-sec-2">🔒 ECDH 訊息加密 IPC 通道</h3>
+            <p>為了防範同瀏覽器下的惡意擴充套件通過監聽 `chrome.runtime.onMessage` 來攔截密碼，Popup UI 與 Background Service Worker 之間每次通訊皆進行 ECDH 金鑰交換：</p>
+            <ul>
+              <li>Popup 載入時，在記憶體建立臨時的 <strong>ECDH (P-256)</strong> 金鑰對，並將公鑰傳送給背景 Service Worker。</li>
+              <li>背景 Service Worker 收到後，亦生成自己的 ECDH 金鑰對，並依此計算出共享金鑰，將其公鑰回傳給 Popup。</li>
+              <li>雙方基於該共享金鑰衍生出一組 256 位元的 <strong>AES-GCM</strong> 金鑰，此金鑰僅存於各自執行緒的內存變數中。</li>
+              <li>此後所有 IPC 通訊資料（包括解鎖密碼、新增金鑰、產出 TOTP 碼）皆使用此動態金鑰加密傳輸。</li>
+            </ul>
+          </section>
+        </article>
+
+        <!-- CHAPTER 4: BACKUP SCHEMA -->
+        <article id="chapter-backup-schema" class="doc-chapter hidden">
+          <header class="doc-header">
+            <div class="doc-badge">檔案規格</div>
+            <h2>備份檔案格式與還原標準</h2>
+            <p class="lead">零知識備份機制（Zero-Knowledge Backup）確保使用者金鑰可攜性的同時，亦不洩漏任何機密資訊。</p>
+          </header>
+
+          <section class="doc-section">
+            <h3 id="backup-sec-1">📋 JSON 備份資料格式規格</h3>
+            <p>當使用者選擇導出備份時，背景程式會將整個加密儲存庫包裝成 JSON 導出。以下為其完整的資料規格格式：</p>
+            
+            <div class="code-block-wrapper">
+              <div class="code-block-header">
+                <div class="code-meta">
+                  <svg class="file-icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>acore_backup_schema.json</span>
+                </div>
+                <button class="btn-copy" data-target="backup-json">複製代碼</button>
+              </div>
+              <pre><code id="backup-json">{
+  "salt": "uWz6H0bN2rD58iPqQvL9+A==",  // 用於衍生 KEK 的 16 字節 CSPRNG 隨機鹽值 (Base64)
+  "sentinel": {
+    "iv": "kPn9XmYt5Rq1aBc7",         // Sentinel 加密使用之 12 字節 IV (Base64)
+    "ciphertext": "z8JqP+4dFh2..."    // 解密後應為 "ZeroTrustSentinel" (AES-GCM 密文)
+  },
+  "vault": {
+    "iv": "wQe9RnT5Yu3iOp8A",         // 密鑰資料庫加密之 12 字節 IV (Base64)
+    "ciphertext": "a1b2C3d4E5f6..."   // 解密後為包含帳戶金鑰的 JSON 陣列密文
+  },
+  "logs": {
+    "iv": "zXy8Wv2Ts5Rq9PmN",         // 安全審計日誌加密之 12 字節 IV (Base64)
+    "ciphertext": "m9n8B7v6C5x..."    // 解密後為歷史審計日誌之 JSON 陣列密文
+  }
+}</code></pre>
+            </div>
+          </section>
+
+          <section class="doc-section">
+            <h3 id="backup-sec-2">🔄 還原解密解析流程</h3>
+            <p>在還原時，系統會先依據備份檔內的 <code>salt</code> 與使用者輸入的密碼衍生出臨時 KEK，試圖解密 <code>sentinel</code>。若解密文字為 <code>ZeroTrustSentinel</code>，則驗證密碼成功，進而解密 <code>vault</code>，並以<strong>當前系統的 active KEK</strong> 重新加密寫入 chrome.storage.local，完成還原。</p>
+          </section>
+        </article>
+
+        <!-- CHAPTER 5: AUDIT SPEC -->
+        <article id="chapter-audit-spec" class="doc-chapter hidden">
+          <header class="doc-header">
+            <div class="doc-badge">合規審計</div>
+            <h2>企業安全審計日誌規範</h2>
+            <p class="lead">acore 在本地維護一份不可篡改且全程加密的安全日誌（Audit Logs），用以滿足企業客戶的安全合規與存取追蹤需求。</p>
+          </header>
+
+          <section class="doc-section">
+            <h3 id="audit-sec-1">📝 日誌物件架構規格</h3>
+            <p>每次使用者進行關鍵操作（如解鎖、新增金鑰、複製驗證碼、自動填入或匯出備份）時，系統皆會將該操作時間戳與詳細內容加密寫入日誌庫中。</p>
+            
+            <div class="code-block-wrapper">
+              <div class="code-block-header">
+                <div class="code-meta">
+                  <svg class="file-icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>audit_log_schema.json</span>
+                </div>
+                <button class="btn-copy" data-target="log-json">複製代碼</button>
+              </div>
+              <pre><code id="log-json">[
+  {
+    "timestamp": 1780560000000,              // 事件發生的毫秒級時間戳
+    "event": "Vault initialized"            // 事件行為描述
+  },
+  {
+    "timestamp": 1780560120000,
+    "event": "Added account: Discord (admin)"
+  },
+  {
+    "timestamp": 1780560250000,
+    "event": "Copied TOTP for: Discord:admin"
+  },
+  {
+    "timestamp": 1780560300000,
+    "event": "Autofilled TOTP for: Discord (admin)"
+  }
+]</code></pre>
+            </div>
+          </section>
+
+          <section class="doc-section">
+            <h3 id="audit-sec-2">🛡️ 日誌竄改防範</h3>
+            <p>審計日誌儲存在加密的 <code>logs</code> 欄位中，除非使用者提供正確的主密碼解密金鑰，否則本機檔案將一直保持加密狀態。這使得任何未經授權的本地修改與寫入在解密時都會被驗證標籤（Tag Mismatch）拒絕，進而保證日誌的真實性與合規完整度。</p>
+          </section>
+        </article>
+
+        <!-- Docs Pagination Bottom -->
+        <nav class="docs-pagination-nav">
+          <div class="pagination-nav__item">
+            <button class="pagination-nav__link pagination-nav__link--prev" id="btn-prev-page">
+              <div class="pagination-nav__sublabel">上一頁</div>
+              <div class="pagination-nav__label" id="label-prev-page">無</div>
+            </button>
+          </div>
+          <div class="pagination-nav__item pagination-nav__item--next">
+            <button class="pagination-nav__link pagination-nav__link--next" id="btn-next-page">
+              <div class="pagination-nav__sublabel">下一頁</div>
+              <div class="pagination-nav__label" id="label-next-page">安裝指南</div>
+            </button>
+          </div>
+        </nav>
+      </main>
+
+      <!-- Right Sidebar: Table of Contents -->
+      <aside class="toc-sidebar">
+        <div class="toc-header">本頁目錄</div>
+        <ul class="toc-list" id="toc-list">
+          <!-- Dynamically populated in app.js -->
+        </ul>
+      </aside>
+    </div>
+
+
+    <!-- ================= VIEW 3: WEB VERIFICATION CENTER ================= -->
+    <div id="view-dashboard" class="dashboard-container-layout hidden">
+      <div class="dashboard-inner-container">
+        
+        <article id="chapter-dashboard" class="doc-chapter">
+          <header class="doc-header">
+            <div class="doc-badge">本機安全驗證</div>
+            <h2>金鑰驗證中心 (Web Dashboard)</h2>
+            <p class="lead">在這裡解密您的 2FA 密鑰庫。當指定平台要求驗證碼時，在此點擊代碼即可複製並輸入。</p>
+          </header>
+
+          <!-- SETUP SCREEN -->
+          <div id="web-setup-view" class="web-view hidden">
+            <form id="web-form-setup" class="matrix-form web-card-form">
+              <h3>初始化安全庫</h3>
+              <p class="subtitle">此瀏覽器尚未部署金鑰庫，請設定您的主密碼 (Master Password)。</p>
+              
+              <div class="input-group">
+                <label for="web-setup-password">設定主密碼</label>
+                <input type="password" id="web-setup-password" required placeholder="輸入至少 8 位強密碼">
+                <div class="password-strength-bar">
+                  <div id="web-strength-fill"></div>
+                </div>
+                <span class="input-hint" id="web-strength-label">密碼強度：未輸入</span>
+              </div>
+              
+              <div class="input-group">
+                <label for="web-setup-confirm">確認主密碼</label>
+                <input type="password" id="web-setup-confirm" required placeholder="再次輸入主密碼">
+              </div>
+
+              <div class="security-warning">
+                <svg viewBox="0 0 24 24" class="warning-icon"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span class="warning-text">請務必牢記主密碼！本系統為本機零知識加密架構，若密碼丟失，金鑰將永久遺失。</span>
+              </div>
+              
+              <button type="submit" class="btn btn-primary">部署安全矩陣</button>
+            </form>
+          </div>
+
+          <!-- LOCKED SCREEN -->
+          <div id="web-locked-view" class="web-view hidden">
+            <form id="web-form-unlock" class="matrix-form web-card-form compact-form">
+              <div class="lock-graphic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+              <h3>金鑰庫已鎖定</h3>
+              <p class="subtitle">請輸入主密碼以解鎖您的 2FA 密鑰。</p>
+              
+              <div class="input-group">
+                <input type="password" id="web-unlock-password" required placeholder="請輸入主密碼" autofocus>
+                <div class="error-msg hidden" id="web-unlock-error">密碼錯誤，解密失敗！</div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary">安全解鎖驗證庫</button>
+            </form>
+          </div>
+
+          <!-- UNLOCKED SCREEN -->
+          <div id="web-unlocked-view" class="web-view hidden">
+            <!-- Top Dashboard Header Actions -->
+            <div class="web-db-header">
+              <div class="web-timer-group">
+                <svg class="progress-ring" width="32" height="32">
+                  <circle class="progress-ring__circle-bg" stroke="rgba(0,0,0,0.06)" stroke-width="3" fill="transparent" r="13" cx="16" cy="16" />
+                  <circle class="progress-ring__circle" id="web-timer-circle" stroke="var(--primary)" stroke-width="3" fill="transparent" r="13" cx="16" cy="16" stroke-dasharray="81.68" stroke-dashoffset="0" />
+                </svg>
+                <span class="web-timer-text" id="web-timer-text">30s</span>
+              </div>
+              
+              <div class="web-action-group">
+                <button class="btn btn-secondary" id="web-btn-open-add">
+                  <svg viewBox="0 0 24 24" class="btn-icon" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>新增 2FA 密鑰</span>
+                </button>
+                <button class="btn btn-secondary" id="web-btn-open-logs">審計日誌</button>
+                <button class="btn btn-secondary" id="web-btn-open-backup">資料備份</button>
+                <button class="btn btn-primary" id="web-btn-lock">立即鎖定</button>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="web-empty-state" class="empty-state hidden">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+              <p>本機加密金鑰庫尚無任何保護帳戶</p>
+              <span class="sub-text">請點擊上方「新增 2FA 密鑰」寫入金鑰資料。</span>
+            </div>
+
+            <!-- Web Accounts Grid -->
+            <div id="web-accounts-grid" class="web-accounts-grid">
+              <!-- Dynamically populated via app.js -->
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WEB MODAL 1: ADD ACCOUNT -->
+  <div id="web-modal-add" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>金鑰驗證中心 - 新增 2FA</h3>
+        <button class="close-btn" id="web-btn-close-add">&times;</button>
+      </div>
+      <form id="web-form-add" class="matrix-form">
+        <div class="input-group">
+          <label for="web-add-issuer">服務平台 (Issuer)</label>
+          <input type="text" id="web-add-issuer" required placeholder="例如：Discord, GitHub, Google" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label for="web-add-name">帳戶標識 (Account Email)</label>
+          <input type="text" id="web-add-name" required placeholder="例如：admin@company.com" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label for="web-add-secret">金鑰密鑰 (Secret Key - Base32)</label>
+          <input type="text" id="web-add-secret" required placeholder="輸入 2FA 金鑰字串" autocomplete="off">
+        </div>
+        <div class="error-msg hidden" id="web-add-error">金鑰格式錯誤，必須為 Base32 字元！</div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="web-btn-cancel-add">取消</button>
+          <button type="submit" class="btn btn-primary">確認寫入</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- WEB MODAL 2: AUDIT LOGS -->
+  <div id="web-modal-logs" class="modal-overlay hidden">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>本機金鑰安全審計日誌 (Web View)</h3>
+        <button class="close-btn" id="web-btn-close-logs">&times;</button>
+      </div>
+      <div class="logs-container">
+        <div class="logs-table-wrapper">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th>時間戳</th>
+                <th>事件描述</th>
+              </tr>
+            </thead>
+            <tbody id="web-logs-tbody">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="web-btn-close-logs-footer">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEB MODAL 3: BACKUP / RESTORE -->
+  <div id="web-modal-backup-panel" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>資料備份與還原</h3>
+        <button class="close-btn" id="web-btn-close-backup">&times;</button>
+      </div>
+      <div class="backup-options">
+        <div class="backup-section">
+          <h4>零知識備份 (Export)</h4>
+          <p class="section-desc">以當前主密碼再次加密導出。適合實體備份儲存。</p>
+          <button class="btn btn-secondary btn-full" id="web-btn-export-file">
+            <span>導出加密備份檔 (.json)</span>
+          </button>
+        </div>
+        <div class="backup-divider"></div>
+        <div class="backup-section">
+          <h4>還原備份資料 (Import)</h4>
+          <p class="section-desc">載入原備份檔並輸入其主密碼進行資料還原。</p>
+          <div class="file-input-wrapper">
+            <button class="btn btn-secondary btn-full" id="web-btn-trigger-file">選擇 json 備份檔</button>
+            <input type="file" id="web-import-file" accept=".json" class="hidden">
+            <span id="web-selected-filename" class="selected-filename">未選擇任何檔案</span>
+          </div>
+          <div class="input-group hidden" id="web-backup-password-group">
+            <label for="web-backup-password">輸入該備份檔的主密碼</label>
+            <input type="password" id="web-backup-password" placeholder="密碼">
+          </div>
+          <div class="error-msg hidden" id="web-import-error">還原失敗！解密密碼錯誤。</div>
+          <button class="btn btn-primary btn-full hidden" id="web-btn-submit-import">確認還原寫入</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">複製成功</div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
